@@ -102,89 +102,32 @@ async def 주사위(ctx):
     await ctx.send(f"결과는 {randint(1,6)} 입니다")
 
 @bot.command()
-async def play1(ctx):
+async def p(ctx):
+    num = int(ctx.message.content[3])
+    int_num = int(num)
+    print(num)
     channel = ctx.author.voice.channel
     file = pd.read_csv("play_list.csv")
-    url = file["주소"][0]
+    url = file["주소"][num]
+    print(url)
     if bot.voice_clients == []:
         await channel.connect()
-        await ctx.send("채널 연결됨" + str(bot.voice_clients[0].channel))
-
+        await ctx.send(f"노래를 재생함 :" + str(file["제목"][num]))
     ydl_opts = {'format': 'bestaudio'}
     FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+    voice = bot.voice_clients[0]
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         URL = info['formats'][0]['url']
-    voice = bot.voice_clients[0]
     voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
 
+    
 @bot.command()
-async def play2(ctx):
-    channel = ctx.author.voice.channel
+async def 리스트(ctx):
     file = pd.read_csv("play_list.csv")
-    url = file["주소"][1]
-    if bot.voice_clients == []:
-        await channel.connect()
-        await ctx.send("채널 연결됨" + str(bot.voice_clients[0].channel))
-
-    ydl_opts = {'format': 'bestaudio'}
-    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        URL = info['formats'][0]['url']
-    voice = bot.voice_clients[0]
-    voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
-
-@bot.command()
-async def play3(ctx):
-    channel = ctx.author.voice.channel
-    file = pd.read_csv("play_list.csv")
-    url = file["주소"][2]
-    if bot.voice_clients == []:
-        await channel.connect()
-        await ctx.send("채널 연결됨" + str(bot.voice_clients[0].channel))
-
-    ydl_opts = {'format': 'bestaudio'}
-    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        URL = info['formats'][0]['url']
-    voice = bot.voice_clients[0]
-    voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
-
-@bot.command()
-async def play4(ctx):
-    channel = ctx.author.voice.channel
-    file = pd.read_csv("play_list.csv")
-    url = file["주소"][3]
-    if bot.voice_clients == []:
-        await channel.connect()
-        await ctx.send("채널 연결됨" + str(bot.voice_clients[0].channel))
-
-    ydl_opts = {'format': 'bestaudio'}
-    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        URL = info['formats'][0]['url']
-    voice = bot.voice_clients[0]
-    voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
-
-@bot.command()
-async def play5(ctx):
-    channel = ctx.author.voice.channel
-    file = pd.read_csv("play_list.csv")
-    url = file["주소"][4]
-    if bot.voice_clients == []:
-        await channel.connect()
-        await ctx.send("채널 연결됨" + str(bot.voice_clients[0].channel))
-
-    ydl_opts = {'format': 'bestaudio'}
-    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        URL = info['formats'][0]['url']
-    voice = bot.voice_clients[0]
-    voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
+    await ctx.send("현재 저장된 곡")
+    for i in range(0,5):
+        await ctx.send(f"{i+1}" + str(file["제목"][i]) + " ")
 
 
 @bot.command()
