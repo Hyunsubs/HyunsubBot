@@ -103,7 +103,7 @@ async def 주사위(ctx):
 
 @bot.command()
 async def p(ctx):
-    num = int(ctx.message.content[3])
+    num = int(ctx.message.content[3]) - 1
     int_num = int(num)
     print(num)
     channel = ctx.author.voice.channel
