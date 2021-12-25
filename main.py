@@ -87,6 +87,8 @@ async def on_message(message):
 
 @bot.command()
 async def 허허(ctx):
+    print(os.path.realpath(__file__))
+    print(os.path.abspath(__file__))
     await ctx.send(f"호호호")
 
 @bot.command()
