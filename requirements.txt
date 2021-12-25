@@ -3,3 +3,4 @@ selenium
 pandas
 youtube_dl
 bs4
+pynacl
