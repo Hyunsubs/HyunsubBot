@@ -45,8 +45,14 @@ async def on_message(message):
         keyword = message.content[4:]
 
         url = 'https://www.youtube.com/results?search_query={}'.format(keyword)
-
-        driver = webdriver.Chrome("GOOGLE_CHROME_BIN")
+        
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        
+        
+        driver = webdriver.Chrome(executable_path = os.environ.get("GOOGLE_CHROME_BIN"), chrome_options = chrome_options)
         driver.get(url)
         soup = bs(driver.page_source, "html.parser")
         driver.close()
