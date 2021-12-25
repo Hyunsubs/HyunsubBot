@@ -46,7 +46,7 @@ async def on_message(message):
 
         url = 'https://www.youtube.com/results?search_query={}'.format(keyword)
 
-        driver = webdriver.Chrome('chromedriver.exe')
+        driver = webdriver.Chrome("GOOGLE_CHROME_PATH")
         driver.get(url)
         soup = bs(driver.page_source, "html.parser")
         driver.close()
