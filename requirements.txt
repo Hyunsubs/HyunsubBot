@@ -2,3 +2,4 @@ discord.py
 selenium
 pandas
 youtube_dl
+bs4
