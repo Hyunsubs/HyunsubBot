@@ -19,6 +19,7 @@ async def on_ready(): # 실행이 된다면
     await bot.change_presence(status=discord.Status.online)
     print('Bot 준비완료!') # 터미널 부분에 출력하라 (' Bot 준비완료!' ) 를
 
+play_list =[]
 
 @bot.event
 async def on_message(message):
@@ -45,19 +46,18 @@ async def on_message(message):
         keyword = message.content[4:]
 
         url = 'https://www.youtube.com/results?search_query={}'.format(keyword)
-        
+
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
-        
+
         chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
         driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
         
         driver.get(url)
         soup = bs(driver.page_source, "html.parser")
         driver.close()
-
         name = soup.select('a#video-title')
         video_url = soup.select("a#video-title")
         view = soup.select("a#video-title")
@@ -78,7 +78,7 @@ async def on_message(message):
         }
 
         youtubeDf = pd.DataFrame(youtubeDic)
-        csv_file = youtubeDf.to_csv("play_list.csv")
+        youtubeDf.to_csv(str(channel) + "play_list.csv")
 
         for i in range(0,5):
             await channel.send("'''" + f"{i+1}" + ". " + youtubeDf["제목"][i] + "'''")
@@ -88,8 +88,6 @@ async def on_message(message):
 
 @bot.command()
 async def 허허(ctx):
-    print(os.path.realpath(__file__))
-    print(os.path.abspath(__file__))
     await ctx.send(f"호호호")
 
 @bot.command()
@@ -101,33 +99,128 @@ async def 동석(ctx):
 async def 주사위(ctx):
     await ctx.send(f"결과는 {randint(1,6)} 입니다")
 
+
+
+def next_url():
+    ydl_opts = {'format': 'bestaudio'}
+    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+                      'options': '-vn'}
+    if len(play_list) > 0:
+        url = play_list[0]
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=False)
+            URL = info['formats'][0]['url']
+        print(URL)
+        play_list.pop(0)
+        return URL
+    else:
+        pass
+
+
+
 @bot.command()
 async def p(ctx):
-    num = int(ctx.message.content[3]) - 1
-    int_num = int(num)
-    print(num)
-    channel = ctx.author.voice.channel
-    file = pd.read_csv("play_list.csv")
-    url = file["주소"][num]
-    print(url)
-    if bot.voice_clients == []:
-        await channel.connect()
-        await ctx.send(f"노래를 재생함 :" + str(file["제목"][num]))
     ydl_opts = {'format': 'bestaudio'}
-    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-    voice = bot.voice_clients[0]
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        URL = info['formats'][0]['url']
-    voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
+    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+                      'options': '-vn'}
+    if ctx.message.content[3:].startswith("https"):
+        url = ctx.message.content[3:]
+        voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+        if bot.voice_clients == []:
+            voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+        if voice is None:
+            play_list.append(url)
+            voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=ctx.author.voice.channel.name)
+            await voiceChannel.connect()
+            voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+            print("Holy")
+            await ctx.send(f"노래를 재생함:" + url)
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(play_list[0], download=False)
+                URL = info['formats'][0]['url']
+            try:
+                voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),
+                           after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
+            except:
+                play_list.append(url)
+                print(play_list)
+            # voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
+        else:
+            if not bot.voice_clients[0].is_playing():
+                voice.play(discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS),
+                           after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
+            else:
+                play_list.append(url)
+                await ctx.send("노래를 예약합니다" + url)
+                print("Moly")
+    else:
+        num = int(ctx.message.content[3]) - 1
+        print(num)
+        file = pd.read_csv(str(ctx.channel)+"play_list.csv")
+        url = file["주소"][num]
+        voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+        if bot.voice_clients == []:
+            voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+        if voice is None:
+            play_list.append(url)
+            voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=ctx.author.voice.channel.name)
+            await voiceChannel.connect()
+            voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+            print("Holy")
+            await ctx.send(f"노래를 재생함:" + str(file["제목"][num]))
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(play_list[0], download=False)
+                URL = info['formats'][0]['url']
+            try:
+                voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS) , after= lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
+            except:
+                play_list.append(url)
+                print(play_list)
+            os.remove(str(ctx.channel)+"play_list.csv")
+            #voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
+        else:
+            if not bot.voice_clients[0].is_playing():
+                voice.play(discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS),
+                           after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
+            else:
+                play_list.append(url)
+                await ctx.send("노래를 예약함 : " + str(file["제목"][num]) + " ")
+                print("Moly")
 
-    
+
 @bot.command()
 async def 리스트(ctx):
-    file = pd.read_csv("play_list.csv")
-    await ctx.send("현재 저장된 곡")
-    for i in range(0,5):
-        await ctx.send(f"{i+1}" + str(file["제목"][i]) + " ")
+    if len(play_list) > 0:
+        await ctx.send("재생목록")
+        for n in range(0,len(play_list)):
+            url = play_list[n]
+            print(url)
+            html = urlopen(url)
+            bsObject = bs(html, "html.parser")
+            tmpContent = bsObject.select("title")[0].text
+            await ctx.send(f"{n+1} . :" + tmpContent)
+
+
+    else:
+        await ctx.send("재생목록에 대기중인 곡이 없습니다.")
+
+
+
+@bot.command()
+async def play(ctx):
+    await ctx.channel.purge(limit=1)
+    channel = ctx.author.voice.channel
+    voice = bot.voice_clients[0]
+
+    def repeat(guild, voice, audio):
+        voice.play(audio, after=lambda e: repeat(guild, voice, audio))
+        voice.is_playing()
+
+    if channel and not voice.is_playing():
+        audio = discord.FFmpegPCMAudio('audio.mp3')
+        voice.play(audio, after=lambda e: repeat(ctx.guild, voice, audio))
+        voice.is_playing()
+
 
 
 @bot.command()
@@ -138,8 +231,45 @@ async def l(ctx):
         await ctx.send("현재 채널에 없습니다")
 
 
+@bot.command()
+async def 멈춤(ctx):
+    if not bot.voice_clients[0].is_paused():
+        await ctx.send("곡을 멈춥니다")
+        bot.voice_clients[0].pause()
+    else:
+        await ctx.send("이미 일시 정지중 입니다.")
+
+@bot.command()
+async def 재개(ctx):
+    if bot.voice_clients[0].is_paused():
+        await ctx.send("곡을 재개 합니다")
+        bot.voice_clients[0].resume()
+    else:
+        await ctx.send("이미 플레이중 입니다.")
+
+@bot.command()
+async def 스킵(ctx):
+    ydl_opts = {'format': 'bestaudio'}
+    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+                      'options': '-vn'}
+    if bot.voice_clients[0].is_playing():
+        await ctx.send("현재 재생곡을 스킵합니다")
+        bot.voice_clients[0].stop()
+        url = play_list[0]
+        bot.voice_clients[0].play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS),
+                   after=lambda e: bot.voice_clients[0].play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
+    else:
+        await ctx.send("플레이 할 곡이 없습니다.")
+
+
+
+
+
+
+
 
 
 bot.run('OTIzOTEwMTEyMTE5MjI2Mzc4.YcW4WA.uWeYH3wd9N3v5z8FVl8CjzvFoM8') # 봇의 토큰으로 실행시키는 것입니다.
+
 
 
