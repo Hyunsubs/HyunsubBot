@@ -11,7 +11,7 @@ from discord.ext import commands
 
 from random import randint
 # discord.ext 에서 commands 모듈 가져오기
-prefix = '@' # 접두사 설정 ( 꼭 느낌표로 안해두 됩니다. 본인이 직접 정하는것 입니다.)
+prefix = '#' # 접두사 설정 ( 꼭 느낌표로 안해두 됩니다. 본인이 직접 정하는것 입니다.)
 bot = commands.Bot(command_prefix = prefix) # 봇 접두사 설정 @bot.event # 봇 이벤트시 실행 되는 구문 입니다.
 
 
@@ -26,7 +26,7 @@ async def on_message(message):
     channel = message.channel
 
     # 로스트아크 레벨 로딩
-    if message.content.startswith("@레벨"):
+    if message.content.startswith("#레벨"):
         url = "https://lostark.game.onstove.com/Profile/Character/"+parse.quote(message.content[4:])
         print(url)
         html = urlopen(url)
@@ -41,7 +41,7 @@ async def on_message(message):
         await channel.send(message.content[4:]+" : 아이템 레벨: " +str(tmpContent) + " 원정대 레벨 :" + str(tmpContent2) + " 전투 레벨 :" + str(tmpContent3))
     
     #유튜브 음악 재생
-    elif message.content.startswith("@검색"):
+    elif message.content.startswith("#검색"):
         channel = message.channel
         keyword = message.content[4:]
 
@@ -119,12 +119,12 @@ def next_url():
 
 
 @bot.command()
-async def p(ctx):
+async def 재생(ctx):
     ydl_opts = {'format': 'bestaudio'}
     FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
                       'options': '-vn'}
-    if ctx.message.content[3:].startswith("https"):
-        url = ctx.message.content[3:]
+    if ctx.message.content[4:].startswith("https"):
+        url = ctx.message.content[4:]
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
         if bot.voice_clients == []:
             voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
@@ -153,7 +153,7 @@ async def p(ctx):
                 await ctx.send("노래를 예약합니다" + url)
                 print("Moly")
     else:
-        num = int(ctx.message.content[3]) - 1
+        num = int(ctx.message.content[4]) - 1
         print(num)
         file = pd.read_csv(str(ctx.channel)+"play_list.csv")
         url = file["주소"][num]
