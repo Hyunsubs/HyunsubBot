@@ -141,7 +141,7 @@ async def p(ctx):
                 voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             except:
-                play_list.append(URL)
+                play_list.append(url)
                 print(play_list)
             # voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
         else:
@@ -175,7 +175,7 @@ async def p(ctx):
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(url, download=False)
                     URL = info['formats'][0]['url']                
-                play_list.append(URL)
+                play_list.append(url)
                 print(play_list)
             os.remove(str(ctx.channel)+"play_list.csv")
             #voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
@@ -187,7 +187,7 @@ async def p(ctx):
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(url, download=False)
                     URL = info['formats'][0]['url']
-                play_list.append(URL)
+                play_list.append(url)
                 await ctx.send("노래를 예약함 : " + str(file["제목"][num]) + " ")
                 print("Moly")
 
@@ -207,23 +207,6 @@ async def 리스트(ctx):
 
     else:
         await ctx.send("재생목록에 대기중인 곡이 없습니다.")
-
-
-
-@bot.command()
-async def play(ctx):
-    await ctx.channel.purge(limit=1)
-    channel = ctx.author.voice.channel
-    voice = bot.voice_clients[0]
-
-    def repeat(guild, voice, audio):
-        voice.play(audio, after=lambda e: repeat(guild, voice, audio))
-        voice.is_playing()
-
-    if channel and not voice.is_playing():
-        audio = discord.FFmpegPCMAudio('audio.mp3')
-        voice.play(audio, after=lambda e: repeat(ctx.guild, voice, audio))
-        voice.is_playing()
 
 
 
