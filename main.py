@@ -138,7 +138,6 @@ async def p(ctx):
                 info = ydl.extract_info(url, download=False)
                 URL = info['formats'][0]['url']
             try:
-                play_list.append(url)
                 voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             except:
@@ -171,7 +170,6 @@ async def p(ctx):
                 info = ydl.extract_info(url, download=False)
                 URL = info['formats'][0]['url']
             try:
-                play_list.append(url)
                 voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS) , after= lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             except:
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
