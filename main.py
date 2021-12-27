@@ -129,25 +129,24 @@ async def p(ctx):
         if bot.voice_clients == []:
             voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
         if voice is None:
-            play_list.append(url)
             voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=ctx.author.voice.channel.name)
             await voiceChannel.connect()
             voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
             print("Holy")
             await ctx.send(f"노래를 재생함:" + url)
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(play_list[0], download=False)
+                info = ydl.extract_info(url, download=False)
                 URL = info['formats'][0]['url']
             try:
                 voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             except:
-                play_list.append(url)
+                play_list.append(URL)
                 print(play_list)
             # voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
         else:
             if not bot.voice_clients[0].is_playing():
-                voice.play(discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS),
+                voice.play(discord.FFmpegPCMAudio(play_list[0], **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             else:
                 play_list.append(url)
@@ -162,19 +161,21 @@ async def p(ctx):
         if bot.voice_clients == []:
             voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
         if voice is None:
-            play_list.append(url)
             voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=ctx.author.voice.channel.name)
             await voiceChannel.connect()
             voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
             print("Holy")
             await ctx.send(f"노래를 재생함:" + str(file["제목"][num]))
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(play_list[0], download=False)
+                info = ydl.extract_info(url, download=False)
                 URL = info['formats'][0]['url']
             try:
                 voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS) , after= lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             except:
-                play_list.append(url)
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url, download=False)
+                    URL = info['formats'][0]['url']                
+                play_list.append(URL)
                 print(play_list)
             os.remove(str(ctx.channel)+"play_list.csv")
             #voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
@@ -183,7 +184,10 @@ async def p(ctx):
                 voice.play(discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             else:
-                play_list.append(url)
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url, download=False)
+                    URL = info['formats'][0]['url']
+                play_list.append(URL)
                 await ctx.send("노래를 예약함 : " + str(file["제목"][num]) + " ")
                 print("Moly")
 
