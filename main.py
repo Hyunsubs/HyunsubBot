@@ -138,14 +138,15 @@ async def p(ctx):
                 info = ydl.extract_info(url, download=False)
                 URL = info['formats'][0]['url']
             try:
+                play_list.append(url)
                 voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             except:
-                play_list.append(url)
                 print(play_list)
             # voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
         else:
             if not bot.voice_clients[0].is_playing():
+                play_list.append(url)
                 voice.play(discord.FFmpegPCMAudio(play_list[0], **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             else:
@@ -170,17 +171,18 @@ async def p(ctx):
                 info = ydl.extract_info(url, download=False)
                 URL = info['formats'][0]['url']
             try:
+                play_list.append(url)
                 voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS) , after= lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             except:
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(url, download=False)
                     URL = info['formats'][0]['url']                
-                play_list.append(url)
                 print(play_list)
             os.remove(str(ctx.channel)+"play_list.csv")
             #voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
         else:
             if not bot.voice_clients[0].is_playing():
+                play_list.append(url)
                 voice.play(discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             else:
