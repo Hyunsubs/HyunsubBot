@@ -11,7 +11,7 @@ from discord.ext import commands
 
 from random import randint
 # discord.ext 에서 commands 모듈 가져오기
-prefix = '$' # 접두사 설정 ( 꼭 느낌표로 안해두 됩니다. 본인이 직접 정하는것 입니다.)
+prefix = '@' # 접두사 설정 ( 꼭 느낌표로 안해두 됩니다. 본인이 직접 정하는것 입니다.)
 bot = commands.Bot(command_prefix = prefix) # 봇 접두사 설정 @bot.event # 봇 이벤트시 실행 되는 구문 입니다.
 
 
@@ -26,7 +26,7 @@ async def on_message(message):
     channel = message.channel
 
     # 로스트아크 레벨 로딩
-    if message.content.startswith("$레벨"):
+    if message.content.startswith("@레벨"):
         url = "https://lostark.game.onstove.com/Profile/Character/"+parse.quote(message.content[4:])
         print(url)
         html = urlopen(url)
@@ -41,7 +41,7 @@ async def on_message(message):
         await channel.send(message.content[4:]+" : 아이템 레벨: " +str(tmpContent) + " 원정대 레벨 :" + str(tmpContent2) + " 전투 레벨 :" + str(tmpContent3))
     
     #유튜브 음악 재생
-    elif message.content.startswith("$검색"):
+    elif message.content.startswith("@검색"):
         channel = message.channel
         keyword = message.content[4:]
 
@@ -146,7 +146,7 @@ async def p(ctx):
         else:
             if not bot.voice_clients[0].is_playing():
                 play_list.append(url)
-                voice.play(discord.FFmpegPCMAudio(play_list[0], **FFMPEG_OPTIONS),
+                voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             else:
                 play_list.append(url)
@@ -181,7 +181,7 @@ async def p(ctx):
         else:
             if not bot.voice_clients[0].is_playing():
                 play_list.append(url)
-                voice.play(discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS),
+                voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             else:
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
