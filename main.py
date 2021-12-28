@@ -39,6 +39,11 @@ async def on_message(message):
 
         print(tmpContent)
         await channel.send(message.content[4:]+" : 아이템 레벨: " +str(tmpContent) + " 원정대 레벨 :" + str(tmpContent2) + " 전투 레벨 :" + str(tmpContent3))
+        
+    if message.content.startswith("시발"):
+        msg = message.content
+        await msg.delete()
+    
     
     #유튜브 음악 재생
     elif message.content.startswith("$검색"):
