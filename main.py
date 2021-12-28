@@ -111,7 +111,6 @@ def next_url():
             info = ydl.extract_info(url, download=False)
             URL = info['formats'][0]['url']
         print(URL)
-        play_list.pop(0)
         return URL
     else:
         pass
@@ -140,14 +139,19 @@ async def 재생(ctx):
             try:
                 voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
+                play_list.pop(0)
             except:
                 print(play_list)
             # voice.play(play1(num,ctx), after=lambda e: play1(num,ctx))
         else:
-            if not bot.voice_clients[0].is_playing():
+            if not bot.voice_clients[0].is_playing():      
                 play_list.append(url)
-                voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS),
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url, download=False)
+                    URL = info['formats'][0]['url']
+                voice.play(discord.FFmpegPCMAudio(URL(), **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
+                play_list.pop(0)
             else:
                 play_list.append(url)
                 await ctx.send("노래를 예약합니다" + url)
@@ -181,7 +185,10 @@ async def 재생(ctx):
         else:
             if not bot.voice_clients[0].is_playing():
                 play_list.append(url)
-                voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS),
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url, download=False)
+                    URL = info['formats'][0]['url']      
+                voice.play(discord.FFmpegPCMAudio(URL(), **FFMPEG_OPTIONS),
                            after=lambda e: voice.play(discord.FFmpegPCMAudio(next_url(), **FFMPEG_OPTIONS)))
             else:
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
