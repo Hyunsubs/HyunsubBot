@@ -40,7 +40,7 @@ async def on_message(message):
         print(tmpContent)
         await channel.send(message.content[4:]+" : 아이템 레벨: " +str(tmpContent) + " 원정대 레벨 :" + str(tmpContent2) + " 전투 레벨 :" + str(tmpContent3))
         
-     if message.guild:
+    if message.guild:
         async for message in message.channel.history():
             if message.content in "시발":
                 try:
