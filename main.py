@@ -147,7 +147,7 @@ async def 재생(ctx):
                 await ctx.send("노래를 예약합니다")
                 print("Moly")
     else:
-        num = int(ctx.message.content[3]) - 1
+        num = int(ctx.message.content[4]) - 1
         print(num)
         file = pd.read_csv(str(ctx.channel)+"play_list.csv")
         url = file["주소"][num]
