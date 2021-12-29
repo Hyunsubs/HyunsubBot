@@ -256,7 +256,7 @@ async def 스킵(ctx):
         await ctx.send("현재 재생곡을 스킵합니다")
         voice = bot.voice_clients[0]
         bot.voice_clients[0].stop()
-        url = play_list[0]
+        play_list.pop(0)
         bot.voice_clients[0].play(discord.FFmpegPCMAudio(next_url(voice), **FFMPEG_OPTIONS),
                    after=lambda e: bot.voice_clients[0].play(discord.FFmpegPCMAudio(next_url(voice), **FFMPEG_OPTIONS)))
     else:
