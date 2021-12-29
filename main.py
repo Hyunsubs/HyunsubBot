@@ -110,8 +110,8 @@ async def 재생(ctx):
     ydl_opts = {'format': 'bestaudio'}
     FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
                       'options': '-vn'}
-    if ctx.message.content[3:].startswith("https"):
-        url = ctx.message.content[3:]
+    if ctx.message.content[4:].startswith("https"):
+        url = ctx.message.content[4:]
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
         if bot.voice_clients == []:
             voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
