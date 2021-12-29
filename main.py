@@ -256,9 +256,11 @@ async def 스킵(ctx):
         await ctx.send("현재 재생곡을 스킵합니다")
         voice = bot.voice_clients[0]
         bot.voice_clients[0].stop()
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(play_list[0], download=False)
+            URL = info['formats'][0]['url']
         play_list.pop(0)
-        bot.voice_clients[0].play(discord.FFmpegPCMAudio(next_url(voice), **FFMPEG_OPTIONS),
-                   after=lambda e: bot.voice_clients[0].play(discord.FFmpegPCMAudio(next_url(voice), **FFMPEG_OPTIONS)))
+        voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),after=lambda e: next_url(voice))
     else:
         await ctx.send("플레이 할 곡이 없습니다.")
 
