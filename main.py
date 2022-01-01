@@ -263,6 +263,10 @@ async def 스킵(ctx):
         voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),after=lambda e: next_url(voice))
     else:
         await ctx.send("플레이 할 곡이 없습니다.")
+        
+@bot.command()
+async def 생일(ctx):
+    await ctx.send("조현주씨의 21번째 생일을 모두 축하해주세요!!!!!")
 
 
 
