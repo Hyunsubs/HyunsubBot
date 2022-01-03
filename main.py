@@ -2,6 +2,7 @@ import discord # discord 모듈을 불러오기
 from selenium import webdriver
 import pandas as pd
 import asyncio
+import datetime as dt
 from ydl import *
 
 from urllib.request import urlopen
