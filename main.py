@@ -266,7 +266,19 @@ async def 스킵(ctx):
         
 @bot.command()
 async def 생일(ctx):
-    await ctx.send("조현주씨의 21번째 생일을 모두 축하해주세요!!!!!")
+    now = dt.datetime.now()
+    year = now.year
+    month = now.month
+    day = now.day
+
+    birth_df = pd.read_csv("생일.csv")
+    birth_dict = birth_df.to_dict("records")
+
+    for man in birth_dict:
+        if man["생월"] == month and man["생일"] == day:
+            await ctx.send(f"{man['이름']}님의 {year - man['생년']}번째 생일을 축하합니다!")
+        else:
+            await ctx.send(f"{man['이름']}님의 생일 : {man['생월']}월 {man['생일']}일")
 
 
 
