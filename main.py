@@ -280,6 +280,11 @@ async def 생일(ctx):
             await ctx.send(f"{man['이름']}님의 {year - man['생년']}번째 생일을 축하합니다!")
         else:
             await ctx.send(f"{man['이름']}님의 생일 : {man['생월']}월 {man['생일']}일")
+            
+@bot.command()
+async def 현호는(ctx):
+    await ctx.send("현주를 좋아한다")
+    await ctx.send("얼레리 꼴레리~")
 
 
 
