@@ -2,6 +2,7 @@ discord.py
 selenium
 pandas
 asyncio
+ydl
 youtube_dl
 bs4
 pynacl
