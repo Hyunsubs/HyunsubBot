@@ -4,6 +4,7 @@ import pandas as pd
 import asyncio
 import datetime as dt
 from ydl import *
+import re
 from playopts import FFMPEG_OPTIONS,url_convert
 
 from urllib.request import urlopen
@@ -234,7 +235,24 @@ async def 생일(ctx):
             break
         else:
             await ctx.send(f"{man['이름']}님의 생일 : {man['생월']}월 {man['생일']}일")
-            
+        
+@bot.command()
+async def 주식(ctx):
+    name = ctx.message.content[4:]
+    file = pd.read_csv("종목코드.csv",encoding="cp949")
+
+    for n in range(0,len(file)):
+        if file["한글 종목약명"][n].lower() == name.lower():
+            code = file["단축코드"][n]
+            a = urlopen("https://finance.naver.com/item/main.nhn?code="+code)
+            soup = bs(a.read(), "html.parser")
+            info = soup.select(".blind")
+            slice_info = str(info[5]).split("\n")
+            main_info = slice_info[5]
+            main_info = re.sub("<dd>", "", main_info)
+            main_info = re.sub("</dd>", "", main_info)
+            await ctx.send(file["한글 종목약명"][n] + " 정보: " + main_info)
+            break
 
 
 
