@@ -208,6 +208,7 @@ async def 스킵(ctx):
             info = ydl.extract_info(play_list[0], download=False)
             URL = info['formats'][0]['url']
         play_list.pop(0)
+        list_name.pop(0)
         voice.play(discord.FFmpegPCMAudio(URL, **FFMPEG_OPTIONS),after=lambda e: next_url(voice))
     else:
         await ctx.send("플레이 할 곡이 없습니다.")
