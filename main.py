@@ -133,6 +133,9 @@ async def 재생(ctx):
         print(num)
         file = pd.read_csv(str(ctx.channel)+"play_list.csv")
         url = file["주소"][num]
+        if url.find("&list") != -1:
+            index_num = url.find("&list")
+            url = ctx.message.content[4:index_num+4]
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
         if voice is None:
             voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=ctx.author.voice.channel.name)
