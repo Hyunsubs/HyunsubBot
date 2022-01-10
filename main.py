@@ -104,11 +104,13 @@ def next_url(voice):
 
 @bot.command()
 async def 재생(ctx):
-    ydl_opts = {'format': 'bestaudio'}
-    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-                      'options': '-vn'}
     if ctx.message.content[4:].startswith("https"):
         url = ctx.message.content[4:]
+        if url.find("&list") != -1:
+            index_num = url.find("&list")
+            url = ctx.message.content[4:index_num]
+            print(url)
+            
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
         if voice is None:
             voiceChannel = discord.utils.get(ctx.guild.voice_channels, name=ctx.author.voice.channel.name)
