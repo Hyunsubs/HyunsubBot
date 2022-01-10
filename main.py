@@ -24,6 +24,7 @@ async def on_ready(): # 실행이 된다면
     
 FFMPEG_OPTIONS = FFMPEG_OPTIONS
 play_list =[]
+list_name =[]
 
 @bot.event
 async def on_message(message):
@@ -94,6 +95,7 @@ async def on_message(message):
 def next_url(voice):
     try:
         play_list.pop(0)
+        list_name.pop(0)
     except:
         pass
     voice.play(discord.FFmpegPCMAudio(play_list[0], **FFMPEG_OPTIONS),after=lambda e: next_url(voice))
@@ -114,10 +116,12 @@ async def 재생(ctx):
             voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
             URL = url_convert(url)
             play_list.append(URL)
+            list_name.append(url)
             voice.play(discord.FFmpegPCMAudio(play_list[0], **FFMPEG_OPTIONS),after=lambda e: next_url(voice))
         else:
             URL = url_convert(url)
             play_list.append(URL)
+            list_name.append(url)
             try:
                 voice.play(discord.FFmpegPCMAudio(play_list[0], **FFMPEG_OPTIONS),after=lambda e: next_url(voice))
             except:
@@ -134,10 +138,12 @@ async def 재생(ctx):
             voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
             URL = url_convert(url)
             play_list.append(URL)
+            list_name.append(url)
             voice.play(discord.FFmpegPCMAudio(play_list[0], **FFMPEG_OPTIONS), after=lambda e: next_url(voice))
         else:
             URL = url_convert(url)
             play_list.append(URL)
+            list_name.append(url)
             try:
                 voice.play(discord.FFmpegPCMAudio(play_list[0], **FFMPEG_OPTIONS), after=lambda e: next_url(voice))
             except:
@@ -147,10 +153,10 @@ async def 재생(ctx):
 
 @bot.command()
 async def 리스트(ctx):
-    if len(play_list) > 0:
+    if len(list_name) > 0:
         await ctx.send("재생목록")
-        for n in range(0,len(play_list)):
-            url = play_list[n]
+        for n in range(0,len(list_name)):
+            url = list_name[n]
             print(url)
             html = urlopen(url)
             bsObject = bs(html, "html.parser")
@@ -219,13 +225,11 @@ async def 생일(ctx):
     for man in birth_dict:
         if man["생월"] == month and man["생일"] == day:
             await ctx.send(f"{man['이름']}님의 {year - man['생년']}번째 생일을 축하합니다!")
+            break
         else:
             await ctx.send(f"{man['이름']}님의 생일 : {man['생월']}월 {man['생일']}일")
             
-@bot.command()
-async def 현호는(ctx):
-    await ctx.send("현주를 좋아한다")
-    await ctx.send("얼레리 꼴레리~")
+
 
 
 
