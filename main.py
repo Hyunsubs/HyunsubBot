@@ -108,7 +108,7 @@ async def 재생(ctx):
         url = ctx.message.content[4:]
         if url.find("&list") != -1:
             index_num = url.find("&list")
-            url = ctx.message.content[4:index_num]
+            url = ctx.message.content[4:index_num+4]
             print(url)
             
         voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
