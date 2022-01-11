@@ -183,6 +183,9 @@ async def 퇴장(ctx):
     else:
         await voice.disconnect()
         await ctx.send("채널을 나갑니다")
+        if len(play_list) > 0 and len(list_name) > 0:
+            play_list.clear()
+            list_name.clear()
 
 
 @bot.command()
