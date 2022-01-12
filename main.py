@@ -5,7 +5,9 @@ import asyncio
 import datetime as dt
 from ydl import *
 import re
+import os
 from playopts import FFMPEG_OPTIONS,url_convert
+import reqeusts
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as bs
@@ -257,7 +259,41 @@ async def 주식(ctx):
             await ctx.send(file["한글 종목약명"][n] + " 정보: " + main_info)
             break
 
+@bot.command()
+async def 일어번역(ctx):
+    text = ctx.message.content[6:]
+    print(text)
+    ja_params = {
+        "source" : "ja",
+        "target" : "ko",
+        "text" : text,
 
+    }
+    header = {
+        "X-Naver-Client-Id": PAPAGO_ID,
+        "X-Naver-Client-Secret": PAPAGO_SECRET,
+
+    }
+    response = requests.post(url="https://openapi.naver.com/v1/papago/n2mt", headers=header, json=ja_params)
+    await ctx.send(response.json()["message"]["result"]["translatedText"])
+
+@bot.command()
+async def 영어번역(ctx):
+    text = ctx.message.content[6:]
+    print(text)
+    en_params = {
+        "source" : "en",
+        "target" : "ko",
+        "text" : text,
+
+    }
+    header = {
+        "X-Naver-Client-Id": PAPAGO_ID,
+        "X-Naver-Client-Secret": PAPAGO_SECRET,
+
+    }
+    response = requests.post(url="https://openapi.naver.com/v1/papago/n2mt", headers=header, json=en_params)
+    await ctx.send("번역결과 : " + response.json()["message"]["result"]["translatedText"])
 
 
 
