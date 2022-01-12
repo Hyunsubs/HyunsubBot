@@ -6,3 +6,4 @@ ydl
 youtube_dl
 bs4
 pynacl
+requests
