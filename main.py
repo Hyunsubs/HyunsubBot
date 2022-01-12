@@ -270,8 +270,8 @@ async def 일어번역(ctx):
 
     }
     header = {
-        "X-Naver-Client-Id": PAPAGO_ID,
-        "X-Naver-Client-Secret": PAPAGO_SECRET,
+        "X-Naver-Client-Id": os.environ.get('PAPAGO_ID'),
+        "X-Naver-Client-Secret": os.environ.get('PAPAGO_SECRET'),
 
     }
     response = requests.post(url="https://openapi.naver.com/v1/papago/n2mt", headers=header, json=ja_params)
