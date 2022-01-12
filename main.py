@@ -288,8 +288,8 @@ async def 영어번역(ctx):
 
     }
     header = {
-        "X-Naver-Client-Id": PAPAGO_ID,
-        "X-Naver-Client-Secret": PAPAGO_SECRET,
+        "X-Naver-Client-Id": os.environ.get('PAPAGO_ID'),
+        "X-Naver-Client-Secret": os.environ.get('PAPAGO_SECRET'),
 
     }
     response = requests.post(url="https://openapi.naver.com/v1/papago/n2mt", headers=header, json=en_params)
@@ -297,4 +297,4 @@ async def 영어번역(ctx):
 
 
 
-bot.run('OTIzOTEwMTEyMTE5MjI2Mzc4.YcW4WA.uWeYH3wd9N3v5z8FVl8CjzvFoM8') # 봇의 토큰으로 실행시키는 것입니다.
+bot.run(os.environ.get('token')) # 봇의 토큰으로 실행시키는 것입니다.
