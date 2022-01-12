@@ -7,7 +7,7 @@ from ydl import *
 import re
 import os
 from playopts import FFMPEG_OPTIONS,url_convert
-import reqeusts
+import requests
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup as bs
