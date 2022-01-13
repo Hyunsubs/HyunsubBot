@@ -89,9 +89,11 @@ async def on_message(message):
 
         youtubeDf = pd.DataFrame(youtubeDic)
         youtubeDf.to_csv(str(channel) + "play_list.csv")
-
+        
+        embed = discord.Embed(title="검색결과", description ="검색된 음악", color="0x62c1cc")
         for i in range(0,5):
-            await channel.send("'''" + f"{i+1}" + ". " + youtubeDf["제목"][i] + "'''")
+            embed.add_field(name=f"{i+1}: ", value= youtubeDf["제목"][i])
+        message = await ctx.send(embed=embed)
     await bot.process_commands(message)
 
 
