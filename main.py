@@ -324,7 +324,7 @@ async def 미세먼지(ctx):
     
 @bot.command()
 async def 확진자수(ctx):
-    driver = webdriver.Chrome('chromedriver.exe')
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     driver.implicitly_wait(3)
     driver.get("https://coronaboard.kr/")
     info = driver.find_elements_by_xpath("//*[@id='top']/div[6]/div[2]/div[1]/p[2]")[0].text
