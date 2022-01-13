@@ -321,7 +321,14 @@ async def 미세먼지(ctx):
     for order in ordered_info:
         embed.add_field(name=f"지역{ordered_info.index(order)+1}", value=f"{order}")
     message = await ctx.send(embed=embed)
-
+    
+@bot.command()
+async def 확진자수(ctx):
+    driver = webdriver.Chrome('chromedriver.exe')
+    driver.implicitly_wait(3)
+    driver.get("https://coronaboard.kr/")
+    info = driver.find_elements_by_xpath("//*[@id='top']/div[6]/div[2]/div[1]/p[2]")[0].text
+    await ctx.send("금일 확진자수 : " + info)
 
 
 bot.run(os.environ.get('token')) # 봇의 토큰으로 실행시키는 것입니다.
