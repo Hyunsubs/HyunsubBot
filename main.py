@@ -93,7 +93,7 @@ async def on_message(message):
         embed = discord.Embed(title="검색결과", description ="검색된 음악", color=0x62c1cc)
         for i in range(0,5):
             embed.add_field(name=f"{i+1}: ", value= youtubeDf["제목"][i])
-        message = await ctx.send(embed=embed)
+        message = await channel.send(embed=embed)
     await bot.process_commands(message)
 
 
@@ -296,6 +296,31 @@ async def 영어번역(ctx):
     }
     response = requests.post(url="https://openapi.naver.com/v1/papago/n2mt", headers=header, json=en_params)
     await ctx.send("번역결과 : " + response.json()["message"]["result"]["translatedText"])
+
+@bot.command()
+async def 미세먼지(ctx):
+    a = urlopen(
+        "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80")
+    soup = bs(a.read(), "html.parser")
+    info = soup.find_all("tbody")
+    info = info[1]
+    info = info.get_text()
+    info = info.split(' ')
+    while '' in info:
+        info.remove('')
+    ordered_info = []
+    new_num = 0
+    for i in range(17):
+        new_text = ""
+        for n in range(4):
+            new_text = new_text + " " + info[new_num]
+            new_num += 1
+        ordered_info.append(new_text)
+    print(ordered_info)
+    embed = discord.Embed(title="미세먼지", description="검색결과",color=0x62c1cc)
+    for order in ordered_info:
+        embed.add_field(name=f"지역{ordered_info.index(order)+1}", value=f"{order}")
+    message = await ctx.send(embed=embed)
 
 
 
