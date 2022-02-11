@@ -70,7 +70,6 @@ async def on_message(message):
         
         driver.get(url)
         soup = bs(driver.page_source, "html.parser")
-        print(soup)
         name = soup.select('a#video-title')
         print(name)
         video_url = soup.select("a#video-title")
