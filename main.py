@@ -69,12 +69,9 @@ async def on_message(message):
         driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
         
         driver.get(url)
+        driver.implicitly_wait(10)
         title = driver.find_elements_by_id(id_="video-title")
-        
-        soup = bs(driver.page_source, "html.parser")
-        name = soup.select('a#video-title')
-        video_url = soup.select("a#video-title")
-        view = soup.select("a#video-title")
+        driver.close()
         
 
         name_list = []
@@ -90,7 +87,7 @@ async def on_message(message):
         print(name_list)
         print(url_list)
         print(view_list)
-        driver.close()
+
         youtubeDic = {
             "제목": name_list,
             "주소": url_list,
