@@ -89,9 +89,15 @@ async def on_message(message):
             "주소": url_list,
             "조회수": view_list
         }
+        
+     
 
         youtubeDf = pd.DataFrame(youtubeDic)
         youtubeDf.to_csv(str(channel) + "play_list.csv")
+        
+        print(youtubeDic)
+        print(youtubeDf)
+        print("씨발")
         
         embed = discord.Embed(title="검색결과", description ="검색된 음악", color=0x62c1cc)
         for i in range(0,5):
