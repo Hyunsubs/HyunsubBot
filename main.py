@@ -69,6 +69,8 @@ async def on_message(message):
         driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
         
         driver.get(url)
+        title = driver.find_elements_by_id(id_="video-title")
+        
         soup = bs(driver.page_source, "html.parser")
         name = soup.select('a#video-title')
         video_url = soup.select("a#video-title")
@@ -78,12 +80,13 @@ async def on_message(message):
         name_list = []
         url_list = []
         view_list = []
+        
+        for title in title:
+            name_list.append(title.text)
+            url_list.append(title.get_attribute("href"))
+            view_list.append(title.get_attribute("aria-label"))
+        
 
-        for i in range(len(name)):
-            name_list.append(name[i].text.strip())
-            view_list.append(view[i].get("aria-label").split()[-1])
-        for i in video_url:
-            url_list.append("{}{}".format("https://www.youtube.com",i.get("href")))
         print(name_list)
         print(url_list)
         print(view_list)
@@ -104,7 +107,7 @@ async def on_message(message):
         print("씨발")
         
         embed = discord.Embed(title="검색결과", description ="검색된 음악", color=0x62c1cc)
-        for i in range(0,5):
+        for i in range(0,4):
             embed.add_field(name=f"{i+1}: ", value= youtubeDf["제목"][i])
         message = await channel.send(embed=embed)
     await bot.process_commands(message)
