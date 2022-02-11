@@ -8,4 +8,3 @@ bs4
 pynacl
 requests
 webdriver_manager
-webdriver_manager.chrome
