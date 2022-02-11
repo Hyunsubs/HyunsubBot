@@ -71,6 +71,7 @@ async def on_message(message):
         driver.get(url)
         driver.implicitly_wait(10)
         title = driver.find_elements_by_id(id_="video-title")
+        print(title)
         driver.close()
         
 
