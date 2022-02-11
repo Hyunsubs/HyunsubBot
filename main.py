@@ -70,10 +70,10 @@ async def on_message(message):
         
         driver.get(url)
         soup = bs(driver.page_source, "html.parser")
-        name = soup.select('g#video-title')
-        video_url = soup.select("g#video-title")
-        view = soup.select("g#video-title")
-        driver.close()
+        name = soup.select('a#video-title')
+        video_url = soup.select("a#video-title")
+        view = soup.select("a#video-title")
+        
 
         name_list = []
         url_list = []
@@ -84,6 +84,10 @@ async def on_message(message):
             view_list.append(view[i].get("aria-label").split()[-1])
         for i in video_url:
             url_list.append("{}{}".format("https://www.youtube.com",i.get("href")))
+        print(name_list)
+        print(url_list)
+        print(view_list)
+        driver.close()
         youtubeDic = {
             "제목": name_list,
             "주소": url_list,
