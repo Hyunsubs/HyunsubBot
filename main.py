@@ -66,7 +66,7 @@ async def on_message(message):
         chrome_options.add_argument("--no-sandbox")
 
         chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), chrome_options=chrome_options)
+        driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
         
         driver.get(url)
         soup = bs(driver.page_source, "html.parser")
