@@ -70,10 +70,11 @@ async def on_message(message):
         
         driver.get(url)
         soup = bs(driver.page_source, "html.parser")
-        driver.close()
         name = soup.select('a#video-title')
         video_url = soup.select("a#video-title")
         view = soup.select("a#video-title")
+        
+        driver.close()
 
         name_list = []
         url_list = []
