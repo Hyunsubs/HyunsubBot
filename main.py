@@ -72,7 +72,7 @@ async def on_message(message):
         driver.implicitly_wait(10)
         title = driver.find_elements_by_id(id_="video-title")
         print(title)
-        driver.close()
+
         
 
         name_list = []
@@ -88,6 +88,8 @@ async def on_message(message):
         print(name_list)
         print(url_list)
         print(view_list)
+        
+        driver.quit()
 
         youtubeDic = {
             "제목": name_list,
