@@ -74,7 +74,6 @@ async def on_message(message):
         video_url = soup.select("a#video-title")
         view = soup.select("a#video-title")
         
-        driver.close()
 
         name_list = []
         url_list = []
