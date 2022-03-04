@@ -360,7 +360,7 @@ async def 에픽게임즈(ctx):
     response = requests.get(url="https://free-epic-games.p.rapidapi.com/free",headers=params)
     game_list = response.json()["freeGames"]["current"]
     for title in game_list:
-    await ctx.send(title["title"])
+        await ctx.send(title["title"])
 
 
 bot.run(os.environ.get('token')) # 봇의 토큰으로 실행시키는 것입니다.
