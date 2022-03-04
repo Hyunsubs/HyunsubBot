@@ -353,6 +353,8 @@ async def 확진자수(ctx):
     
 @bot.command()
 async def 에픽게임즈(ctx):
+    X_RapidAPI_Host = "free-epic-games.p.rapidapi.com"
+    X_RapidAPI_Key = "35d80ef5a8mshff27fd4cd58555ep185de7jsn39626e4594ab"
     params = {
     "X-RapidAPI-Host" : X_RapidAPI_Host,
     "X-RapidAPI-Key" : X_RapidAPI_Key,  
