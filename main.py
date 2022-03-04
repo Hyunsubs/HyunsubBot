@@ -350,6 +350,17 @@ async def 확진자수(ctx):
     driver.get("https://coronaboard.kr/")
     info = driver.find_elements_by_xpath("//*[@id='top']/div[6]/div[2]/div[1]/p[2]")[0].text
     await ctx.send("금일 확진자수 : " + info)
+    
+@bot.command()
+async def 에픽게임즈(ctx):
+    params = {
+    "X-RapidAPI-Host" : X_RapidAPI_Host,
+    "X-RapidAPI-Key" : X_RapidAPI_Key,  
+    }
+    response = requests.get(url="https://free-epic-games.p.rapidapi.com/free",headers=params)
+    game_list = response.json()["freeGames"]["current"]
+    for title in game_list:
+    await ctx.send(title["title"])
 
 
 bot.run(os.environ.get('token')) # 봇의 토큰으로 실행시키는 것입니다.
