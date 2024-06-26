@@ -8,3 +8,6 @@
 3. Support Traslation English To Korean, Japanese To Korean
 4. Support Weather News
 5. Support Birthday Notifications You have to Add your Birthday to 생일.csv file
+
+# ALERT
+deprecated cannot use anymore
